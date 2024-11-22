@@ -13,6 +13,10 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.types.*;
 
+import weka.classifiers.bayes.*;
+import weka.core.WekaPackageManager;
+import weka.filters.supervised.instance.SMOTE;
+
 public class Main {
     public static void main(String[] args) {
         
@@ -22,18 +26,18 @@ public class Main {
         RowFactory.create(Vectors.dense(6.0, 7.0, 0.0, 8.0)),
         RowFactory.create(Vectors.sparse(4, new int[]{0, 3}, new double[]{9.0, 1.0}))
         );
-
+        
         StructType schema = new StructType(new StructField[]{
             new StructField("features", new VectorUDT(), false, Metadata.empty()),});
         
         SparkContext sparkContext = new SparkContext("local[4]", "test");
         SparkSession sparkSession = new SparkSession(sparkContext);
         Dataset<Row> df = sparkSession.createDataFrame(data, schema);
+        
         Row r1 = Correlation.corr(df, "features").head();
         System.out.println("Pearson correlation matrix:\n" + r1.get(0).toString());
 
         Row r2 = Correlation.corr(df, "features", "spearman").head();
         System.out.println("Spearman correlation matrix:\n" + r2.get(0).toString());
-
     }
 }
