@@ -26,6 +26,8 @@ import weka.attributeSelection.PrincipalComponents;
 
 public class PreprocessUtils {
 
+    //load the data file from the path
+    //use the path in the Constant.java
     @SuppressWarnings("finally")
     public static Instances loadData(String path){
         Instances data = null;
@@ -41,6 +43,8 @@ public class PreprocessUtils {
         }
     }
 
+    //save data to the path with arff type
+    //use the path in the Constants.java
     public static void saveData(Instances data, String path){
         try{
             ArffSaver saver = new ArffSaver();
@@ -83,7 +87,9 @@ public class PreprocessUtils {
             return instances;
         }
     }
-
+    
+    //apply SMOTE for the data with specific class index
+    //note that the attribute index of this method start from 0
     @SuppressWarnings("finally")
     public static Instances SMOTE(Instances data, int classIndex){
         Instances instances = null;
@@ -108,6 +114,8 @@ public class PreprocessUtils {
         }
     }
 
+    //remove outlier for the data
+    //outlier factor is set by 12.0
     @SuppressWarnings("finally")
     public static Instances removeOutliers(Instances data){
         Instances instances = null;
