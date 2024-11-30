@@ -1,8 +1,9 @@
-package com.datamining_project.processing; 
+package com.datamining_project.data.pre_processing.processing; 
 import weka.core.Instance; 
 import weka.core.Instances; 
 import weka.core.converters.ConverterUtils.DataSource;
-import weka.classifiers.bayes.NaiveBayes; 
+import weka.classifiers.bayes.NaiveBayes;
+import weka.classifiers.trees.J48;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation; 
 import weka.core.DenseInstance;
@@ -11,7 +12,7 @@ public class ClassifyInstance {
     public static void main(String[] args) throws Exception { 
 
         // load training dataset
-        DataSource dataSource = new DataSource("../data/pre_processing/output1.arff");
+        DataSource dataSource = new DataSource("official\\src\\main\\java\\com\\datamining_project\\data\\pre_processing\\output1.arff");
         Instances dataset = dataSource.getDataSet();  
 
         // set class index to the last attribute 
@@ -26,11 +27,18 @@ public class ClassifyInstance {
 
         // create classifier
         NaiveBayes nb = new NaiveBayes();
-        nb.buildClassifier(dataset); 
+        nb.buildClassifier(dataset);  
+
+        // J48 
+        J48 tree = new J48();
+        tree.buildClassifier(dataset);
+        System.out.println("J48 Tree Model:");
+        System.out.println(tree);
 
         // Evaluation
         Evaluation evaluation = new Evaluation(dataset);
-        evaluation.crossValidateModel(nb, dataset, 10, new java.util.Random(1)); 
+        evaluation.crossValidateModel(tree, dataset, 10, new java.util.Random(1));  
+        evaluation.crossValidateModel(nb, dataset, 10, new java.util.Random(1));
         System.out.println("Evaluation results: ");
         System.out.println(evaluation.toSummaryString());
 
@@ -38,8 +46,10 @@ public class ClassifyInstance {
         System.out.println("Making predictions on dataset instances:");
         for (int i = 0; i < dataset.numInstances(); i++) {
             Instance instance = dataset.instance(i);
-            double predictedClass = nb.classifyInstance(instance);
-            String predictedClassLabel = dataset.classAttribute().value((int) predictedClass);
+            double predictedClass = nb.classifyInstance(instance); 
+            double predictedClass2 = tree.classifyInstance(instance);
+            String predictedClassLabel = dataset.classAttribute().value((int) predictedClass); 
+            String predictedClassLabel2 = dataset.classAttribute().value((int) predictedClass2);  // J48 tree prediction
             System.out.println("Instance " + i + ": Predicted Class = " + predictedClassLabel);
         }
 
@@ -65,8 +75,9 @@ public class ClassifyInstance {
         newInstance.setDataset(dataset);
  
         // Predict the class of the new instance
-        double predictedClassNew = nb.classifyInstance(newInstance);
-        String predictedClassLabelNew = dataset.classAttribute().value((int) predictedClassNew);
+        double predictedClassNew = nb.classifyInstance(newInstance);   
+        double predictedClassNew2 = tree.classifyInstance(newInstance);
+        String predictedClassLabelNew = dataset.classAttribute().value((int) predictedClassNew); 
         System.out.println("New Instance Predicted Class: " + predictedClassLabelNew);
     }
 }
