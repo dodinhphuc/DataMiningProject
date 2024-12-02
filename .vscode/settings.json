@@ -1,8 +1,0 @@
-{
-    "java.configuration.updateBuildConfiguration": "interactive",
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar",
-        "c:\\Users\\Asus\\wekafiles\\packages\\SMOTE\\SMOTE.jar"
-    ],
-    "java.dependency.packagePresentation": "hierarchical"
-}
