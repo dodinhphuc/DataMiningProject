@@ -18,7 +18,11 @@ import weka.core.Instance;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Remove;
 import weka.filters.supervised.instance.SMOTE;
+import weka.filters.unsupervised.attribute.Discretize;
 import weka.filters.unsupervised.attribute.InterquartileRange;
+import weka.filters.unsupervised.attribute.NumericToNominal;
+import weka.filters.unsupervised.instance.Randomize;
+import weka.filters.unsupervised.instance.RemovePercentage;
 import weka.filters.unsupervised.instance.RemoveWithValues;
 import weka.filters.unsupervised.attribute.ReplaceMissingValues;
 
@@ -227,6 +231,85 @@ public class PreprocessUtils {
             System.out.println("Handle missing values successfully!");
         } catch (Exception e){
             System.out.println("Error in handling missing values!");
+            System.err.println(e);
+        } finally {
+            return instances;
+        }
+    }
+
+    public static void splitData(Instances data, double trainingPercentage, String outputPathForTraining, String outputPathForValidating){
+        Instances instances = new Instances(data);
+        Randomize randomize = new Randomize();
+        RemovePercentage removePercentage = new RemovePercentage();
+        RemovePercentage removePercentage2 = null;
+        try {
+            randomize.setInputFormat(instances);
+            instances = Filter.useFilter(instances, randomize);
+            removePercentage.setInputFormat(instances);
+            removePercentage.setPercentage(100.0 - trainingPercentage);
+            removePercentage2 = (RemovePercentage) Filter.makeCopies(removePercentage, 1)[0];
+            removePercentage2.setInvertSelection(true);
+            Instances output1 = Filter.useFilter(instances, removePercentage);
+            Instances output2 = Filter.useFilter(instances, removePercentage2);
+            saveData(output1, outputPathForTraining);
+            saveData(output2, outputPathForValidating);
+            System.out.println("Split data successfully!");
+        } catch (Exception e) {
+            System.out.println("Error in splitting data!");
+            System.err.println(e);
+        }
+    }
+
+    public static void attributeStats(Instances data, int attributeNumber){
+        try {
+            AttributeStats attributeStats = data.attributeStats(attributeNumber);
+            int[] numberOfEachClass = attributeStats.nominalCounts;
+            for (int i = 0; i<numberOfEachClass.length; ++i){
+                System.out.printf("%25s%10s%10.3f%2s\n", data.attribute(attributeNumber).value(i), "-->", (double) numberOfEachClass[i]/data.size()*100, "%");
+            }
+        } catch (Exception e){
+            System.out.println("Error in Attribute Stats!");
+            System.err.println(e);
+        }
+    }
+
+    @SuppressWarnings("finally")
+    public static Instances discretize(Instances data, int binNumber, Object... attributeNumbers){
+        Instances instances = null;
+        Discretize discretize = new Discretize();
+        try {
+            int[] arrayAttributes_int = new int[attributeNumbers.length];
+            for (int i=0; i<attributeNumbers.length; ++i){
+                arrayAttributes_int[i] = (int) attributeNumbers[i];
+            }
+            discretize.setBins(binNumber);
+            discretize.setAttributeIndicesArray(arrayAttributes_int);
+            discretize.setInputFormat(data);
+            instances = Filter.useFilter(data, discretize);
+            System.out.println("Discretize successfully!");
+        } catch (Exception e){
+            System.out.println("Error in discretizing!");
+            System.err.println(e);
+        } finally {
+            return instances;
+        }
+    }
+
+    @SuppressWarnings("finally")
+    public static Instances numericToNominal(Instances data, Object... attributeNumbers){
+        Instances instances = null;
+        NumericToNominal numericToNominal = new NumericToNominal();
+        try {
+            int[] arrayAttributes_int = new int[attributeNumbers.length];
+            for (int i=0; i<attributeNumbers.length; ++i){
+                arrayAttributes_int[i] = (int) attributeNumbers[i];
+            }
+            numericToNominal.setAttributeIndicesArray(arrayAttributes_int);
+            numericToNominal.setInputFormat(data);
+            instances = Filter.useFilter(data, numericToNominal);
+            System.out.println("Numeric-to-Nomial successfully!");
+        } catch (Exception e){
+            System.out.println("Error in Numeric-to-Nomial!");
             System.err.println(e);
         } finally {
             return instances;
