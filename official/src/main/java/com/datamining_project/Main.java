@@ -20,12 +20,19 @@ import weka.core.Instances;
 
 public class Main {
     public static void main(String[] args) {
-        //new Preprocess();
+        new Preprocess();
         
         //new Processing();
-        new Evaluation();
+        //new Evaluation();
 
-        //Instances data = PreprocessUtils.loadData(Constants.OUTPUT_PATH_TRAINING);
+
+        // Instances data = PreprocessUtils.loadData(Constants.INPUT_PATH);
+        // data = PreprocessUtils.removeAttributes(data, 1);
+        // data = PreprocessUtils.replaceMissingValues(data, 0); 
+        // data = PreprocessUtils.removeOutliers(data);
+        // data = PreprocessUtils.labelEncoding(data, 2, "m", 1, "f", 0);
+        // data = PreprocessUtils.SMOTE(data, 0);
+        // PreprocessUtils.attributeStats(data, 0);
         //Instances test = PreprocessUtils.loadData(Constants.OUTPUT_PATH_VALIDATING);
         //data = PreprocessUtils.discretize(data, 20, 0, 1);
         //data = PreprocessUtils.numericToNominal(data, 12);

@@ -99,7 +99,7 @@ public class PreprocessUtils {
         Instances instances = null;
         try{
             SMOTE smote = new SMOTE();
-            String[] opt = new String[]{"-P", "20.0"};
+            String[] opt = new String[]{"-P", "25.0"};
             smote.setOptions(opt);
             data.setClassIndex(classIndex);
             smote.setInputFormat(data); 
@@ -243,6 +243,7 @@ public class PreprocessUtils {
         RemovePercentage removePercentage = new RemovePercentage();
         RemovePercentage removePercentage2 = null;
         try {
+            randomize.setRandomSeed(11);
             randomize.setInputFormat(instances);
             instances = Filter.useFilter(instances, randomize);
             removePercentage.setInputFormat(instances);
@@ -342,7 +343,7 @@ public class PreprocessUtils {
             if (max<count[i]) max = count[i];
         }
         float k =(float) (max-min)/max;
-        if (k < 0.19) return true;
+        if (k < 0.2) return true;
         else return false;
     }
 }
