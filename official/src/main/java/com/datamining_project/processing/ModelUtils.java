@@ -86,7 +86,7 @@ public class ModelUtils {
             naiveBayes.buildClassifier(new_data);
             System.out.println("Successfully in building naive Bayes model!");
         }catch (Exception e) {
-            System.out.println("Error in building naive Bayes model!");
+            System.out.println("Error in building naive Bayes model!"); 
             System.err.println(e);
         }finally {
             return naiveBayes;
