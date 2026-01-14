@@ -5,4 +5,5 @@
 - Implemented and optimized multiple machine learning models such as **J48**, **Naive Bayes**, **Logistic Regression**, and **Random Forest** using hyperparameter tuning and **10-fold cross-validation**.
 - Achieved a peak validation accuracy of **93.22%** with the **Random Forest** model, demonstrating strong effectiveness for real-world medical diagnosis applications.
 
-﻿### Please find the report file for detail information.
+Please find the report file for detail information.
+
